@@ -1,0 +1,114 @@
+<!-- navbar.html -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <a class="navbar-brand" href="{{ url_for('index') }}"><strong>HOME</strong></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('dashboard') }}"><strong>Dashboard</strong></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#passcodeModal"><strong>Controls</strong></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Passcode Modal -->
+<div class="modal fade" id="passcodeModal" tabindex="-1" role="dialog" aria-labelledby="passcodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passcodeModalLabel">Enter Passcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="passcodeForm" method="POST" action="{{ url_for('check_passcode') }}">
+                    <div class="form-group">
+                        <label for="passcodeInput">Passcode</label>
+                        <input type="password" class="form-control" id="passcodeInput" name="passcodeInput" maxlength="4" required>
+                        <small class="form-text text-muted">NOTE: Enter passcode to access controls.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="passcodeForm" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Passcode Modal -->
+<div class="modal fade" id="passcodeModal" tabindex="-1" role="dialog" aria-labelledby="passcodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passcodeModalLabel">Enter Passcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="passcodeForm" method="POST" action="{{ url_for('check_passcode') }}">
+                    <div class="form-group">
+                        <label for="passcodeInput">Passcode</label>
+                        <input type="password" class="form-control" id="passcodeInput" name="passcodeInput" maxlength="4" required>
+                        <small class="form-text text-muted">NOTE: Enter passcode to access controls.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitPasscode()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function submitPasscode() {
+        var passcode = document.getElementById('passcodeInput').value;
+        
+        $.ajax({
+            type: 'POST',
+            url: '/check_passcode',
+            data: $('#passcodeForm').serialize(),
+            success: function(response) {
+                if (response === 'valid') {
+                    // Redirect to controls page
+                    window.location.href = '{{ url_for("controls") }}';
+                    // Optionally close the modal after successful submission
+                    $('#passcodeModal').modal('hide');
+                } else {
+                    // Display alert message at the top of the browser
+                    showAlert('Invalid passcode. Please try again.');
+                }
+            },
+            error: function() {
+                showAlert('Error checking passcode.');
+            }
+        });
+    }
+
+    function showAlert(message) {
+        // Create an alert div at the top of the browser
+        var alertDiv = '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">' +
+                       '<strong>Error!</strong> ' + message +
+                       '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                       '<span aria-hidden="true">&times;</span>' +
+                       '</button>' +
+                       '</div>';
+        $('body').append(alertDiv);
+
+        // Automatically close the alert after 5 seconds (optional)
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+    }
+</script>

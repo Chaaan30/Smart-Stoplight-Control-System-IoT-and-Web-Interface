@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-image: linear-gradient(to bottom, #ffffff, #e7f3ff);
+        }
+
+        .navbar {
+            background-color: #e7f3ff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .traffic-lights {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 50px;
+        }
+
+        .traffic-light {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .traffic-light img {
+            width: 170px;
+            height: auto;
+        }
+
+        .traffic-light-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .traffic-light-info p {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .traffic-light-info span {
+            color: blue;
+        }
+
+    </style>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container mt-5">
+    <h1>Dashboard</h1>
+    <div class="traffic-lights">
+        {% for stoplight in stoplight_data %}
+        <div class="traffic-light">
+            <img src="{{ url_for('static', filename='images/' + stoplight.color.capitalize() + '_1.jpg') }}" alt="{{ stoplight.color }} Traffic Light">
+            <div class="traffic-light-info">
+                <h3>Stoplight {{ stoplight.id }}</h3>
+                <p>Stoplight State: <span id="state{{ stoplight.id }}">{{ stoplight.stat | upper }}</span></p>
+                <p>Current Status: <span id="status{{ stoplight.id }}">{{ stoplight.color | upper }}</span></p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
